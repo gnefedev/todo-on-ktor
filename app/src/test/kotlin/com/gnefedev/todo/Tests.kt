@@ -4,9 +4,23 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
+import org.koin.test.KoinTest
+import org.koin.test.inject
+import org.koin.test.junit5.KoinTestExtension
 
-class Tests {
-    private val todoListService = TodoListService(TodoItemsRepository())
+class Tests : KoinTest {
+    private val todoListService by inject<TodoListService>()
+
+    @Suppress("unused")
+    @JvmField
+    @RegisterExtension
+    val koinTestExtension = KoinTestExtension.create {
+        modules(
+            testModule,
+            applicationModule
+        )
+    }
 
     @Test
     fun `add one item and list all`() {
